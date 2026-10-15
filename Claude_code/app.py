@@ -291,9 +291,10 @@ require_login()
 
 # Accent colour per column. Each panel is a bordered container with a fixed key,
 # which Streamlit exposes as the CSS class `st-key-<key>`.
-COLOURS = {"panel_todo": "#ff4b4b", "panel_habit": "#00e5ff", "panel_skill": "#ffffff"}
+COLOURS = {"panel_todo": "#ff4b4b", "panel_habit": "#00e5ff", "panel_book": "#3fb950"}
+BACKGROUND = "#301934"  # "Dark Purple"
 st.markdown(
-    "<style>"
+    f"<style>.stApp {{ background-color: {BACKGROUND}; }}"
     + "".join(
         f".st-key-{key} {{ border: 2px solid {c} !important; }}"
         f".st-key-{key} h3 {{ color: {c} !important; }}"
@@ -303,12 +304,13 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-st.title("Dashboard")
+# A plain <h1> instead of st.title so it can be centred
+st.markdown("<h1 style='text-align: center;'>Dashboard</h1>", unsafe_allow_html=True)
 # Relative widths; the habit column is wider to fit the 30-day grid
 col_todo, col_habit, col_skill = st.columns([1, 1.4, 1])
 with col_todo, st.container(border=True, key="panel_todo"):
     todo_column()
 with col_habit, st.container(border=True, key="panel_habit"):
     habit_column()
-with col_skill, st.container(border=True, key="panel_skill"):
+with col_skill, st.container(border=True, key="panel_book"):
     book_column()
