@@ -13,14 +13,18 @@ st.set_page_config(page_title="Dashboard", layout="wide")
 
 # ---------- login ----------
 def require_login():
-    """Block the page until the shared password from the secrets is entered."""
-    if st.session_state.get("authed"):
+    """Block the page until the shared password is entered, if one is set in the secrets.
+
+    With no [app] password in the secrets, the dashboard opens straight away.
+    """
+    expected = st.secrets.get("app", {}).get("password")
+    if not expected or st.session_state.get("authed"):
         return
     st.title("Dashboard")
     entered = st.text_input("Password", type="password")
     if entered:
         # compare_digest avoids leaking information through comparison timing
-        if hmac.compare_digest(entered.encode(), st.secrets["app"]["password"].encode()):
+        if hmac.compare_digest(entered.encode(), expected.encode()):
             st.session_state["authed"] = True
             st.rerun()
         st.error("Incorrect password.")
